@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz App</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; padding: 2em; max-width: 900px; margin: auto; }
+    h1 { text-align: center; }
+    .question { font-size: 20px; margin-bottom: 1em; font-weight: bold; }
+    .options button { display: block; width: 100%; text-align: left; padding: 10px; margin: 8px 0; font-size: 16px; border: 2px solid #ccc; background: white; cursor: pointer; }
+    .options button.correct { background-color: #d1ffd1; }
+    .options button.wrong { background-color: #ffd1d1; }
+    .options button:disabled { cursor: default; }
+    .feedback { font-size: 18px; margin-top: 1em; }
+    .status { margin-top: 1em; font-weight: bold; }
+    .navigation { margin-top: 2em; display: flex; justify-content: space-between; }
+    .navigation button { padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+<h1>Quiz App</h1>
+
+<div class="navigation">
+  <button onclick="previousQuestion()" id="prevBtn">⟵ Previous</button>
+  <button onclick="nextQuestion()" id="nextBtn">Next ⟶</button>
+</div>
+
+<!-- leave some space in between the nav and questions -->
+<br><br>
+
+<div class="question" id="questionText">Loading...</div>
+<div class="options" id="optionsContainer"></div>
+<div class="feedback" id="feedbackText"></div>
+<div class="status" id="statusText"></div>
+
+<script>
+let quizData = [];
+let currentQuestion = 0;
+let score = 0;
+const userAnswers = {};
+
+async function loadQuizData() {
+  try {
+    const response = await fetch("quiz_data.json");
+    if (!response.ok) throw new Error("HTTP error " + response.status);
+    quizData = await response.json();
+    loadQuestion(currentQuestion);
+  } catch (error) {
+    document.getElementById("questionText").textContent = "Failed to load quiz data.";
+    console.error("Error loading JSON:", error);
+  }
+}
+
+function loadQuestion(index) {
+  const q = quizData[index];
+  const questionDiv = document.getElementById("questionText");
+  const optionsDiv = document.getElementById("optionsContainer");
+  const feedbackDiv = document.getElementById("feedbackText");
+
+  questionDiv.textContent = `Q${index + 1}: ${q.question}`;
+  feedbackDiv.textContent = "";
+  optionsDiv.innerHTML = "";
+
+  const letters = ["A", "B", "C", "D", "E"];
+  letters.forEach((letter, i) => {
+    const choiceKey = "choice" + (i + 1);
+    const choice = q[choiceKey];
+    if (!choice || choice.trim().toLowerCase() === "none") return;
+
+    const btn = document.createElement("button");
+    btn.textContent = `${letter}. ${choice}`;
+    btn.onclick = () => selectAnswer(letter, btn);
+    optionsDiv.appendChild(btn);
+
+    if (userAnswers[index]) {
+      btn.disabled = true;
+      const correct = q.answer;
+      if (userAnswers[index] === letter) {
+        btn.classList.add(userAnswers[index] === correct ? "correct" : "wrong");
+      }
+      if (letter === correct && userAnswers[index] !== correct) {
+        btn.classList.add("correct");
+      }
+    }
+  });
+
+  updateStatus();
+  document.getElementById("prevBtn").disabled = (index === 0);
+  document.getElementById("nextBtn").disabled = (index === quizData.length - 1 && Object.keys(userAnswers).length !== quizData.length);
+}
+
+function selectAnswer(selected, btn) {
+  if (userAnswers[currentQuestion]) return;
+
+  userAnswers[currentQuestion] = selected;
+  const correct = quizData[currentQuestion].answer;
+
+  if (selected === correct) {
+    score++;
+    document.getElementById("feedbackText").textContent = "✅ Correct!";
+    document.getElementById("feedbackText").style.color = "green";
+  } else {
+    document.getElementById("feedbackText").textContent = `❌ Incorrect! Correct answer: ${correct}`;
+    document.getElementById("feedbackText").style.color = "red";
+  }
+
+  loadQuestion(currentQuestion);
+}
+
+function nextQuestion() {
+  if (currentQuestion < quizData.length - 1) {
+    currentQuestion++;
+    loadQuestion(currentQuestion);
+  } else if (Object.keys(userAnswers).length === quizData.length) {
+    alert(`Quiz complete! Your score: ${score} / ${quizData.length}`);
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    loadQuestion(currentQuestion);
+  }
+}
+
+function updateStatus() {
+  const status = document.getElementById("statusText");
+  status.textContent = `Answered: ${Object.keys(userAnswers).length} / ${quizData.length} | Score: ${score}`;
+}
+
+// Start the app
+loadQuizData();
+</script>
+</body>
+</html>
