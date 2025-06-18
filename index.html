@@ -41,7 +41,7 @@ const userAnswers = {};
 
 async function loadQuizData() {
   try {
-    const response = await fetch("quiz_data.json");
+    const response = await fetch("ai_quiz_data.json");
     if (!response.ok) throw new Error("HTTP error " + response.status);
     quizData = await response.json();
     loadQuestion(currentQuestion);
