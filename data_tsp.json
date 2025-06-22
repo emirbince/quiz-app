@@ -1,371 +1,344 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-    <meta http-equiv="Content-Security-Policy" content="default-src * filesystem: data: gap: http://www.google-analytics.com http://www.googletagmanager.com http://ssl.gstatic.com http://csvjson.s3.amazonaws.com http://csvjson.s3.us-east-2.amazonaws.com 'unsafe-eval' 'unsafe-inline'; media-src *; img-src * data:">
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
-
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-		<title>CSV to JSON - CSVJSON</title>
-		<meta name="description" content="Online tool for converting CSV to JSON. Convert Excel to JSON. Transpose data. Output array or hash.">
-
-		<script type="text/javascript">
-			window.APP = {
-				page: "csv2json",
-				run: true,
-				version: 0.316,
-				id: null,
-				data: null,
-				data_url: null			};
-		</script>
-
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-		<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
-			<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
-
-		<link href="/js/3rd/jQuery-File-Upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" charset="utf-8" />
-		<link rel="stylesheet" href="https://use.typekit.net/dkv2ioo.css">
-
-		
-								<link href="/css/csvjson.css?v=0.316" rel="stylesheet" type="text/css" charset="utf-8" />
-									<script src="/js/3rd.min.js?v=0.316" type="text/javascript"></script>
-									<script src="/js/csvjson.min.js?v=0.316" type="text/javascript"></script>
-									<script src="/js/app.min.js?v=0.316" type="text/javascript"></script>
-			
-		
-		
-		<script>
-			!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t,e){var n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src="https://cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(n,a);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.1.0";
-				analytics.load("mVmXAtABgYVqPdbXw1a4Y19vcesa1cec");
-				analytics.page();
-			}}();
-
-			analytics.ready(function(){
-				var flatfileLinks = $('a[href*="flatfile.com"]');
-
-				flatfileLinks.each(function(){
-					var bareURL = $(this).attr('href')
-					$(this).attr('href', bareURL + '&ajs_event=came_from_csvjson&ajs_prop_ccf_id=' + window.analytics.user().anonymousId())
-				})
-
-				analytics.trackLink(flatfileLinks, 'Clicked Flatfile Link');
-			})
-	</script>
-	<!-- Global site tag (gtag.js) - Google Ads: 831825021 -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-831825021"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-	  gtag('config', 'AW-831825021');
-	</script>
-</head>
-<body>
-		<header class="px-4 py-4 border-bottom bg-light">
-	    <div class="container d-flex flex-wrap justify-content-left pt-2 pb-2">
-					<div class="d-flex align-items-center me-lg-auto text-decoration-none">
-								<a href="/" class="d-flex align-items-center me-lg-auto text-decoration-none">
-									<img src="img/logo_bg-light.svg" width="140">
-								</a>
-							</div>
-
-							<a class="btn d-none d-sm-block" href="https://flatfile.com/get-started?utm_source=csvjson&utm_medium=owned_site&utm_campaign=q1-2022-csvjson-redesign">
-								<img src="img/flatfile-jewel.svg" width="20" style="margin:-2px 5px 0 0px"/>
-								<b>Turnkey CSV Importer</b> &bull; <small>Installs in minutes</small>
-							</a>
-			</div>
-  	</header>
-					<header class="px-4 border-bottom">
-				<div class="container d-flex flex-wrap justify-content-left pt-3 pb-1">
-					<div class="row">
-						<div class="col-md-12">
-							<nav aria-label="breadcrumb">
-								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="/">Home</a></li>
-									<li class="breadcrumb-item active" aria-current="page">
-
-										<div class="dropdown d-flex align-items-center me-lg-auto text-decoration-none">
-													<a href="#" class="d-flex align-items-center me-lg-auto text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
-														csv2json													</a>
-													<ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink" style="">
-														<li><a class="dropdown-item active" href="/csv2json">CSV to JSON</a></li>
-														<li><a class="dropdown-item " href="/json2csv">JSON to CSV</a></li>
-														<li><a class="dropdown-item " href="/sql2json">SQL to JSON</a></li>
-														<li><a class="dropdown-item " href="/csvjson2json">CSVJSON to JSON</a></li>
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item " href="/json_validator">JSON Validator</a></li>
-														<li><a class="dropdown-item " href="/json_beautifier">JSON Beautifier</a></li>
-														<!--<li><a class="dropdown-item" href="/datajanitor">Data Janitor</a></li>-->
-														<li><hr class="dropdown-divider"></li>
-														<li><a class="dropdown-item" href="https://flatfile.com/get-started?utm_source=csvjson&utm_medium=owned_site&utm_campaign=q1-2022-csvjson-redesign">Upgrade to Flatfile</a></li>
-													</ul>
-												</div>
-									</li>
-								</ol>
-							</nav>
-						</div>
-					</div>
-				</div>
-			</header>
-		
-		<div class="container px-4 py-5">
-	<div class="row">
-		<div class="description col-md-12">
-			<h1 class="text-primary fw-bold">CSV or TSV <small class="bi bi-chevron-right"></small>JSON</h1>
-			<p>To get started, upload or paste your data from Excel (saved as CSV or TSV).
-		</div>
-	</div>
-
-	<div class="row gx-5">
-		<div class="col-md-5 mb-5">
-			<div class="mb-5">
-				<label for="fileupload" class="form-label">Upload a CSV file</label>
-				<input id="fileupload" type="file" name="file" class="form-control"/>
-			</div>
-			<div class="mb-3">
-				<label for="csv" class="form-label">Or paste your CSV here</label>
-<textarea id="csv" class="form-control input save" rows="18" spellcheck="false">
-album, year, US_peak_chart_post
-The White Stripes, 1999, -
-De Stijl, 2000, -
-White Blood Cells, 2001, 61
-Elephant, 2003, 6
-Get Behind Me Satan, 2005, 3
-Icky Thump, 2007, 2
-Under Great White Northern Lights, 2010, 11
-Live in Mississippi, 2011, -
-Live at the Gold Dollar, 2012, -
-Nine Miles from the White City, 2013, -
-</textarea>
-			</div>
-			<button id="convert" type="submit" class="btn btn-primary mb-2 me-2">
-				<i class="bi bi-chevron-right"></i> Convert
-			</button>
-			<button id="clear" type="submit" class="btn btn-light mb-2 me-2">
-				<i class="bi bi-backspace"></i> Clear
-			</button>
-		</div>
-
-		<div class="col-md-7 more-bottom-margin">
-			<div class="mb-3">
-				<div class="form-check-inline">
-					<label class="form-label me-2 save" title="Choose your separator">
-						<div class="mb-2">Separator</div>
-						<select class="form-select" id="separator" name="separator">
-							<option value="auto" selected="selected">Auto-detect</option>
-							<option value="comma">Comma</option>
-							<option value="semiColon">Semi-colon</option>
-							<option value="tab">Tab</option>
-						</select>
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<input type="checkbox" id="parseNumbers" name="parseNumbers" class="form-check-input save" checked="checked "/>
-					<label for="parseNumbers" class="form-check-label" title="Check to parse numbers (i.e. '7e2' would become 700). Uncheck to keep original formatted numbers as strings.">
-						 Parse numbers
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<input type="checkbox" id="parseJSON" name="parseJSON" class="form-check-input save" checked="checked "/>
-					<label for="parseJSON" class="form-check-label" title="Check to parse potential values as JSON (numbers, null, false, true, [] and {}). Uncheck to keep original values as strings.">
-						 Parse JSON
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<input type="checkbox" id="transpose" name="transpose" class="form-check-input save" />
-					<label for="transpose" class="form-check-label" title="Transpose the data beforehand.">
-						 Transpose
-					</label>
-				</div>
-				<br/>
-				<div class="form-check-inline">
-					<label class="form-check-label me-2">Output:</label>
-					<input type="radio" id="output-array" name="output" class="form-check-input save" value="array" checked="checked" />
-					<label for="output-array" class="form-check-label" title="Output an array of objects.">
-						Array
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<input type="radio" id="output-hash" name="output" class="form-check-input save" value="hash" />
-					<label for="output-hash" class="form-check-label" title="Output an object instead of an array. First column is used as hash key.">
-						Hash
-					</label>
-				</div>
-				<div class="form-check-inline">
-					<input type="checkbox" id="minify" name="minify" class="form-check-input save" />
-					<label for="minify" class="form-check-label" title="Minify or compact result by removing spaces and new lines.">
-						 Minify
-					</label>
-				</div>
-			</div>
-			<div class="mb-3">
-  <label class="form-label">JSON</label> <span class="result-note"></span>
-  <textarea id="result" class="form-control result save" rows="18" spellcheck="false" disabled></textarea>
-</div>
-<a id="download" class="btn btn-primary mb-2 me-2" href="" download="csvjson.json" disabled="disabled" target="_self">
-  <i class="bi bi-cloud-download"></i> Download
-</a>
-<a id="copy" class="btn btn-light mb-2 me-2" href="#" title="or Ctrl + A then Ctrl + C to copy to clipboard."><i class="bi bi-share"></i> Copy to clipboard</a>
-		</div>
-	</div>
-</div>
-
-
-
-<div class="container px-4 py-5" id="about-flatfile">
-
-	<h2 class="pb-2 border-bottom">Need help cleaning data?</h2>
-
-	<div class="row row-cols-1 row-cols-sm-1 row-cols-md-12 row-cols-lg-12 g-4 py-3">
-	  <div class="col d-flex align-items-start">
-	    <div>
-				<p>
-					Embed all the functionality of csv<strong>json</strong> in any web application with <a href="https://flatfile.com/get-started?utm_source=csvjson&amp;utm_medium=owned_site&amp;utm_campaign=q1-2022-csvjson-redesign">Flatfile</a>. Auto-match columns, validate data fields, and provide an intuitive CSV import experience.
-				</p>
-			</div>
-		</div>
-	</div>
-
-</div>
-
-<div class="container px-4 py-5" id="about-csvjson">
-
-  <h2 class="pb-2 border-bottom">More Details</h2>
-
-  <div class="row row-cols-1 row-cols-sm-1 row-cols-md-12 row-cols-lg-12 g-4 py-3">
-    <div class="col d-flex align-items-start">
-      <div>
-					<ul>
-						<li>
-							This function is available as a <a href="https://www.npmjs.com/package/csvjson-csv2json" target="_blank">npm package</a>
-						</li>
-						<li>
-							CSV stands for <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">Comma Separated Values</a>.
-							Often used as an interchange data format to represent table records, one per line. CSV is plain text.
-						</li>
-						<li>
-							The CSV format is documented in an RFC memo <a href="https://tools.ietf.org/html/rfc4180" target="_blank">RFC-4180</a>.
-						</li>
-						<li>
-							The first line is often the header, or column names. Each subsequent row is a record and should have the same number of fields.
-						</li>
-						<li>
-							Fields containing the separator character, line breaks and double-quotes must be enclosed inside double quotes <code>"</code>.
-						</li>
-						<li>
-							Other separator are often used like tabs <code>\t</code>or semi-colons <code>;</code>.
-							TSV or Tab Separated Values is used to store table data in Clipboards.
-							When data is copied from Excel for example, it is stored as TSV in the Clipboard.
-						</li>
-						<li>
-							With CSVJSON you can parse values as numbers or JSON. Turn on respective <strong>Parse Numbers</strong> and <strong>Parse JSON</strong> switches to convert valid numbers and JSON (null, false, true, [] and {}).
-						</li>
-						<li>
-							With CSVJSON you can transpose the csv before conversion. Rows become columns, and columns become rows.
-						</li>
-						<li>
-							With CSVJSON you can output a hash (or object) instead of an array. In that case, the hash key will be the first column.
-						</li>
-					</ul>
-					<p>
-						<a class="btn btn-light" data-bs-toggle="collapse" href="#collapseOne" role="button" aria-expanded="false" aria-controls="collapseExample">
-							View Change Log
-						</a>
-					</p>
-      </div>
-    </div>
-
-
-		<div id="collapseOne" class="accordion-collapse collapse showclass row row-cols-1 row-cols-sm-1 row-cols-md-12 row-cols-lg-12 g-4">
-			    <div class="col d-flex align-items-start">
-						<div>
-								<h5>Mar 20, 2019</h5><p> Bug fix: Detect duplicate column headers and make them unique. <a href="https://github.com/FlatFilers/csvjson-app/issues/71">GitHub issue #71</a>.</p>
-								<h5>Feb 2, 2019</h5><p> Refactored and published <a href="https://www.npmjs.com/package/csvjson-csv2json" target="_blank">npm package csv2json</a>. Fix for <a href="https://github.com/FlatFilers/csvjson-app/issues/70">GitHub issue #70</a>.</p>
-								<h5>Jan 26, 2019</h5><p> Improvement: Removed 64k limit on download button. Also fixed issue #68 'Cannot work functional with special letters'.</p>
-								<h5>Mar 31, 2018</h5><p> Improvement: Added option to parse JSON values.</p>
-								<h5>Dec 18, 2017</h5><p> Improvement: Added option to minify or compact JSON. <a href="https://github.com/FlatFilers/csvjson-app/issues/21">GitHub issue #21</a></p>
-								<h5>Oct 7, 2016</h5><p> Improvement: Added option to parse number values or not to retain original number formatting. <a href="https://github.com/FlatFilers/csvjson-app/issues/13">GitHub issue #13</a></p>
-								<h5>Jul 09, 2016</h5><p> Fixed bug : If no text is present in a csv field, it was assigned 0 (zero) by default.</p>
-								<h5>Jun 20, 2016</h5><p> Bug fix: strings containing quotes and commas were prematurely cut.</p>
-								<h5>Dec 30, 2015</h5><p> Bug fix: drop quotes on keys of nested objects.</p>
-								<h5>Nov 26, 2015</h5><p> Improvement: Added options to transpose and output object instead of array.</p>
-								<h5>Jan 30, 2014</h5><p> Bug fix: Pasting Excel data into Textarea would cause an upload.</p>
-								<h5>Jan 12, 2014</h5><p> Initial release.</p>
-						</div>
-
-			      </div>
-			    </div>
-
-  </div>
-
-</div>
-
-		<footer class="bd-footer px-3 py-5 mt-5 bg-light">
-  		<div class="container py-5">
-		    <div class="row">
-		      <div class="col-lg-3 mb-3">
-		        <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/" aria-label="Bootstrap">
-							<img src="./img/logo_bg-light.svg" width="140">
-		        </a>
-		        <ul class="list-unstyled small text-muted">
-		          <li class="mb-2">Rage designed and built with love by the <a href="https://flatfile.com/get-started?utm_source=csvjson&utm_medium=owned_site&utm_campaign=q1-2022-csvjson-redesign">Flatfile team</a> with the help of <a href="https://github.com/FlatFilers/csvjson-app/graphs/contributors">our contributors</a>.</li>
-		        </ul>
-		      </div>
-		      <div class="col-sm-6 col-xs-12 col-lg-3 mb-3">
-		        <h5>Convert</h5>
-		        <ul class="list-unstyled">
-		          <li class="mb-2"><a href="/csv2json">CSV to JSON</a></li>
-		          <li class="mb-2"><a href="/json2csv">JSON to CSV</a></li>
-							<li class="mb-2"><a href="/sql2json">SQL to JSON</a></li>
-							<li class="mb-2"><a href="/csvjson2json">CSVJSON to JSON</a></li>
-		        </ul>
-		      </div>
-					<div class="col-sm-6 col-xs-12 col-lg-3 mb-3">
-		        <h5>Validate & Transform</h5>
-		        <ul class="list-unstyled">
-		          <li class="mb-2"><a href="/json_validator">JSON Validator</a></li>
-		          <li class="mb-2"><a href="/json_beautifier">JSON Beautifier</a></li>
-							<!--<li class="mb-2"><a href="/datajanitor">Data Janitor</a></li>-->
-						</ul>
-		      </div>
-		      <div class="col-xs-12 col-sm-6 col-lg-3 mb-3">
-		        <h5>Community</h5>
-		        <ul class="list-unstyled">
-							<li class="mb-2"><a href="https://github.com/FlatFilers/csvjson-app/">Github</a></li>
-							<li class="mb-2"><a href="https://github.com/FlatFilers/csvjson-app/issues?q=is%3Aissue+is%3Aclosed">Change Log</a></li>
-		          <li class="mb-2"><a href="https://github.com/FlatFilers/csvjson-app/issues/new">Issues</a></li>
-		          <li class="mb-2"><a href="https://github.com/FlatFilers/csvjson-app#readme">Docs</a></li>
-		          <li class="mb-2"><a href="https://flatfile.com/get-started?utm_source=csvjson&utm_medium=owned_site&utm_campaign=q1-2022-csvjson-redesign">Corporate sponsor</a></li>
-		        </ul>
-		      </div>
-		    </div>
-  		</div>
-		</footer>
-
-		<script type="text/javascript">
-			_linkedin_partner_id = "686353";
-			window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-			window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-			</script><script type="text/javascript">
-			(function(l) {
-			if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
-			window.lintrk.q=[]}
-			var s = document.getElementsByTagName("script")[0];
-			var b = document.createElement("script");
-			b.type = "text/javascript";b.async = true;
-			b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-			s.parentNode.insertBefore(b, s);})(window.lintrk);
-		</script>
-		<noscript>
-			<img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=686353&fmt=gif" />
-		</noscript>
-
-	</body>
-</html>
+[
+ {
+   "question": "PLC'nin (product life cycle) hangi aşaması, tüketici farkındalığı yaratma çabalarının sonucu olarak yüksek tanıtım harcamalarıyla karakterize edilir?",
+   "choice1": "büyüme ( growth)",
+   "choice2": "ürün geliştirme(product development)",
+   "choice3": "olgunluk(maturity)",
+   "choice4": "tanıtım(introduction)",
+   "choice5": "düşüş(decline)",
+   "answer": "D"
+ },
+ {
+   "question": "Tüketicilerin genellikle sık sık, hemen ve karşılaştırma yapmadan az bir çaba harcayarak satın aldığı tüketici ürünleri ve hizmetleri ________ olarak adlandırılır.",
+   "choice1": "Aranmayan ürünler (Unsought products)",
+   "choice2": "Özel ürünler (specialty)",
+   "choice3": "Alışveriş ürünleri (Shopping products)",
+   "choice4": "Kolaylık ürünleri (Convenience products)",
+   "choice5": "Malzemeler ve onarım hizmetleri ( Supplies and repair services)",
+   "answer": "D"
+ },
+ {
+   "question": "Erica eski çamaşır makinesini yenisiyle değiştirmek istiyor. Para karşılığı en yüksek değeri almak için gerçek satın alma işlemi öncesinde bilgi toplama ve ürün karşılaştırmaları yapmak için önemli bir zaman ve çaba harcamayı planlıyor. Bu durumda Erica bir ________ ürünü satın almayı planlıyor.",
+   "choice1": "kolaylık(convience)",
+   "choice2": "aranmayan(unsought)",
+   "choice3": "özel(special)",
+   "choice4": "alışveriş(shopping)",
+   "choice5": "özel olarak tasarlanmış(exclusive)",
+   "answer": "D"
+ },
+ {
+   "question": "Son birkaç yıl içinde, Binney and Smith'in Crayola boya kalemleri dünya çapında 80'den fazla ülkeye yayılmıştır. Crayola boya kalemleri PLC'nin ________ aşamasındadır.",
+   "choice1": "tanıtım - introduction",
+   "choice2": "geri kalmış - laggard",
+   "choice3": "olgunluk - maturity",
+   "choice4": "düşüş - decline",
+   "choice5": "kuluçka - incubation",
+   "answer": "C"
+ },
+ {
+   "question": "Bir ürün olgunluk aşamasındayken, şirket muhtemelen aşağıdakileri düşünmelidir:",
+   "choice1": "Ürünü veya pazarı hasat etmek",
+   "choice2": "Ürünü, pazarı veya pazarlama karmasını değiştirmek",
+   "choice3": "Ürün hattını elden çıkarmak",
+   "choice4": "Şirketin varlıklarını likide etmek",
+   "choice5": "Ürünü pazar tekliflerinden çıkarmak",
+   "answer": "B"
+ },
+ {
+   "question": "Which stage in the product life cycle is characterized by rapid market acceptance and increasing profits?",
+   "choice1": "introduction",
+   "choice2": "maturity",
+   "choice3": "growth",
+   "choice4": "decline",
+   "choice5": "product development",
+   "answer": "C"
+ },
+ {
+   "question": "________ is the product life cycle period when sales fall off and profits drop.",
+   "choice1": "Introduction",
+   "choice2": "Growth",
+   "choice3": "Maturity",
+   "choice4": "Decline",
+   "choice5": "Product development",
+   "answer": "D"
+ },
+ {
+   "question": "________ is the product life cycle period when sales growth slows because the product has achieved acceptance. Profits level off because marketing costs increase in the face of competition.",
+   "choice1": "Decline",
+   "choice2": "Maturity",
+   "choice3": "Product development",
+   "choice4": "Introduction",
+   "choice5": "Growth",
+   "answer": "B"
+ },
+ {
+   "question": "Which of the following stages of the PLC is characterized with high promotional expenditures that result from an effort to create consumer awareness?",
+   "choice1": "growth",
+   "choice2": "product development",
+   "choice3": "maturity",
+   "choice4": "introduction",
+   "choice5": "decline",
+   "answer": "D"
+ },
+ {
+   "question": "Most products in the marketplace are in the ________ stage of the product life cycle.",
+   "choice1": "growth",
+   "choice2": "decline",
+   "choice3": "maturity",
+   "choice4": "introduction",
+   "choice5": "development",
+   "answer": "C"
+ },
+ {
+   "question": "When Kraft focused on cost cutting with its older, established brands, leaving them to wither without much investment or modification, Kraft decided to ________ the older products.",
+   "choice1": "extend",
+   "choice2": "modify",
+   "choice3": "drop",
+   "choice4": "harvest",
+   "choice5": "analyze",
+   "answer": "D"
+ },
+ {
+   "question": "Fiyat ile ilgili aşağıdakilerden hangisi doğrudur?",
+   "choice1": "Tarihsel olarak, fiyat alıcı seçimine en az etki eden faktördür.",
+   "choice2": "Fiyat, pazarlama karışımındaki en az esnek öğedir.",
+   "choice3": "Ürün özellikleri ve kanal taahhütleri gibi, fiyatlar hızlı bir şekilde değiştirilemez.",
+   "choice4": "Fiyat, müşterilerin bir ürüne sahip olmak için verdikleri tüm değerlerin toplamıdır.",
+   "choice5": "Fiyatlar sadece bir firmanın net karı üzerinde dolaylı bir etkiye sahiptir.",
+   "answer": "D"
+ },
+ {
+   "question": "Ürün taban fiyatı için belirleyici olan aşağıdakilerden hangisidir?",
+   "choice1": "Tüketicilerin ürünün değerine ilişkin algısı",
+   "choice2": "Ürün maliyetleri",
+   "choice3": "Rakiplerin stratejileri",
+   "choice4": "Reklam bütçeleri",
+   "choice5": "Piyasa rekabeti",
+   "answer": "B"
+ },
+ {
+   "question": "Kellner Makine'nin toplam üretim maliyetleri 87.000 dolar olup bunun 45.000 doları sabit maliyetleri temsil eder. Şirket tarafından karşılanan değişken maliyetler aşağıdakilerden hangisidir?",
+   "choice1": "35.000 dolar",
+   "choice2": "42.000 dolar",
+   "choice3": "45.000 dolar",
+   "choice4": "87.000 dolar",
+   "choice5": "132.000 dolar",
+   "answer": "A"
+ },
+ {
+   "question": "Bir üretim tesisi, günlük 2000 düz ekran televizyon üretmek için tasarlanmıştır. Ancak talep daha yüksek. Şirket üretimini günlük 2500 televizyona çıkarmaya çalışırsa, ortalama maliyetler ________, çünkü ________.",
+   "choice1": "azalacak; tesis daha verimli hale gelecek",
+   "choice2": "aynı kalacak; tesis daha verimli hale gelecek",
+   "choice3": "azalacak; tesis verimsiz hale gelecek",
+   "choice4": "artacak; tesis daha verimli hale gelecek",
+   "choice5": "artacak; tesis verimsiz hale gelecek",
+   "answer": "E"
+ },
+ {
+   "question": "Samsung Mobile, bir birim maliyeti 270 dolar olan yeni bir telefon piyasaya sürmeyi planlıyor ve satışlardan %10 kar elde etmek istiyor. Samsung'un kar majı (markup) fiyatı nedir?",
+   "choice1": "$275",
+   "choice2": "$280",
+   "choice3": "$295",
+   "choice4": "$300",
+   "choice5": "$335",
+   "answer": "D"
+ },
+ {
+   "question": "Kar marjı (Markup) fiyatlandırması neden muhtemelen pratik değildir?",
+   "choice1": "Maliyetlerin dalgalanması nedeniyle hesaplama karmaşıktır.",
+   "choice2": "Fiyatı maliyete bağlamak, satıcıların fiyatlandırmayı basitleştirmesine neden olur.",
+   "choice3": "Endüstrideki tüm firmaların bu fiyatlandırma yöntemini kullanmasıyla fiyatlar benzer olmaya eğilimlidir.",
+   "choice4": "Bu yöntem talebi ve rakip fiyatlarını göz ardı eder.",
+   "choice5": "Standart bir markup ile tüketiciler, aşırı fiyatlandırıldıklarını anlar.",
+   "answer": "D"
+ },
+ {
+   "question": "Mansfield İlaçları, bir antibiyotik olan Zipro'yu pazarlamaktadır. Firma sabit maliyeti 1.000.000 dolar ve 50 tablet içeren 1 şişe için 10 dolar fiyat belirlemiştir. Değişken maliyetleri ise şişe başına 2 dolardır. Firmanın başabaş noktası kaç adettir?",
+   "choice1": "25,000",
+   "choice2": "55,000",
+   "choice3": "100,000",
+   "choice4": "115,000",
+   "choice5": "125,000",
+   "answer": "C"
+ },
+ {
+   "question": "Kâr elde etme noktası(break-even point), ________.",
+   "choice1": "toplam gelir ve toplam maliyet eğrilerinin kesiştiği noktadır",
+   "choice2": "talep arzı eşitler",
+   "choice3": "bir birim daha üretimin talepte artışa yol açmayacağı noktadır",
+   "choice4": "şirketin tüm uzun vadeli borçlarını ödeyebileceği noktadır",
+   "choice5": "bir firma satış tahminini aşarsa",
+   "answer": "A"
+ },
+ {
+   "question": "Bir şirketin sabit maliyetleri 100.000 dolar ve değişken maliyetleri birim başına 8 dolardır. Ürününü pazarda doğrudan 12 dolara satmayı planlıyor. Ne kadar üretip satmalıdır ki kâr-elde etme noktasına (break event point) ulaşsın?",
+   "choice1": "20,000",
+   "choice2": "25,000",
+   "choice3": "30,000",
+   "choice4": "35,000",
+   "choice5": "40,000",
+   "answer": "B"
+ },
+ {
+   "question": "Aşağıdakilerden hangisi saf rekabet piyasasını (a pure competitive market )örnekler?",
+   "choice1": "Tek bir piyasa fiyatı yerine bir dizi fiyat aralığında birçok alıcı ve satıcının işlem yaptığı bir pazar",
+   "choice2": "Tek bir firma'nın pazar payının daha büyük bir kısmını kontrol ettiği bir pazar",
+   "choice3": "Birkaç güçlü firmanın daha büyük bir pazar payını kontrol ettiği bir pazar",
+   "choice4": "Sadece birkaç büyük satıcının karakterize ettiği bir pazar",
+   "choice5": "Birçok alıcının ve satıcının birbirine benzer bir emtia ile işlem yaptığı bir pazar.",
+   "answer": "E"
+ },
+ {
+   "question": "Aşağıdakilerden hangisi monopolistik rekabet hakkında doğrudur?",
+   "choice1": "Monopolistik rekabet altında, pazarda birçok alıcı ve satıcı tek bir piyasa fiyatında işlem yapar.",
+   "choice2": "Monopolistik rekabet altında, pazarda sadece birkaç büyük satıcı bulunur.",
+   "choice3": "Monopolistik bir piyasada, pazarlama stratejilerine pek zaman ayrılmaz.",
+   "choice4": "Satıcılar ürünlerini alıcılara farklılaştırabilirler.",
+   "choice5": "Monopolistik bir piyasada, fiyat önemli bir rekabet aracı haline gelir.",
+   "answer": "D"
+ },
+ {
+   "question": "Producing a product or service and making it available to buyers requires building relationships not only with customers but also with key suppliers and resellers in the company's ________.",
+   "choice1": "upstream partnerships",
+   "choice2": "marketing channels",
+   "choice3": "inventory providers",
+   "choice4": "supply chain",
+   "choice5": "downstream partnerships",
+   "answer": "D"
+ },
+ {
+   "question": "The sets of firms that supply companies with the raw materials, components, parts, information, finances, and expertise needed to create products or services are known as ________.",
+   "choice1": "retailers",
+   "choice2": "upstream partners",
+   "choice3": "distributors",
+   "choice4": "downstream partners",
+   "choice5": "distribution channels",
+   "answer": "B"
+ },
+ {
+   "question": "Which of the following terms refers to the wholesalers and retailers that form a vital link between the firm and its customers?",
+   "choice1": "factory-supply networks",
+   "choice2": "downstream partners",
+   "choice3": "resource banks",
+   "choice4": "upstream partners",
+   "choice5": "supply channels",
+   "answer": "B"
+ },
+ {
+   "question": "________ play an important role in efficiently making products available to target markets in the needed varieties and quantities.",
+   "choice1": "Virtual banks",
+   "choice2": "Intermediaries",
+   "choice3": "Price consultants",
+   "choice4": "Uniform-delivery networks",
+   "choice5": "Upstream partners",
+   "answer": "B"
+ },
+ {
+   "question": "Which of the following is an example of an indirect marketing channel?",
+   "choice1": "June Bride, which sells bridal gowns via its click-to-order online catalogs",
+   "choice2": "Farmer Brown, who delivers fresh milk from his dairy to customers every morning",
+   "choice3": "Wine & Dine, which sells its picnic baskets to select novelty stores across the country",
+   "choice4": "Lifebelt Insurance, which sells life insurance through its door-to-door salespeople",
+   "choice5": "Rhonda's Rental, which rents cars to people for the day",
+   "answer": "C"
+ },
+ {
+   "question": "Plasticine Palace supplies its products exclusively to Arts & Crafts, a chain of stationery stores across the country. The chain then makes the plasticine available to end consumers. This is an example of ________.",
+   "choice1": "a direct marketing channel",
+   "choice2": "intensive distribution",
+   "choice3": "an indirect marketing channel",
+   "choice4": "disintermediation",
+   "choice5": "extensive distribution",
+   "answer": "C"
+ },
+ {
+   "question": "Which of the following is Giant Beanstalks' upstream partner?",
+   "choice1": "the management of Greenleaf",
+   "choice2": "the farmers of Riverdale",
+   "choice3": "the trucks that carry Giant Beanstalks' products to Greenleaf",
+   "choice4": "the end-consumers who buy the canned vegetables from Greenleaf",
+   "choice5": "the logistics division of Giant Beanstalk",
+   "answer": "B"
+ },
+ {
+   "question": "A company's total marketing communications mix consists of a specific blend of advertising, sales promotion, public relations, personal selling, and direct-marketing tools that the company uses to communicate customer value and build customer relationships. Which of the following terms best describes this set of communications tools?",
+   "choice1": "the product mix",
+   "choice2": "product line filling",
+   "choice3": "the promotion mix",
+   "choice4": "the price mix",
+   "choice5": "horizontal diversification",
+   "answer": "C"
+ },
+ {
+   "question": "Extel Inc., a home appliance manufacturer, uses sales representatives to sell its products to wholesalers and individual customers. This is an example of ________.",
+   "choice1": "sales promotion",
+   "choice2": "personal selling",
+   "choice3": "public relations",
+   "choice4": "direct and digital marketing",
+   "choice5": "advertising",
+   "answer": "B"
+ },
+ {
+   "question": "The use of short-term incentives to encourage the purchase or sale of a product or service is called ________.",
+   "choice1": "direct and digital marketing",
+   "choice2": "sales promotion",
+   "choice3": "personal selling",
+   "choice4": "public relations",
+   "choice5": "publicity",
+   "answer": "B"
+ },
+ {
+   "question": "Which of the following promotion tools involves building up a good corporate image and handling unfavorable stories and events?",
+   "choice1": "sales promotion",
+   "choice2": "personal selling",
+   "choice3": "direct and digital marketing",
+   "choice4": "public relations",
+   "choice5": "advertising",
+   "answer": "D"
+ },
+ {
+   "question": "Which of the following is a specialized and highly targeted media selection that an advertiser might use to reach smaller customer segments with personalized content?",
+   "choice1": "radio",
+   "choice2": "magazines",
+   "choice3": "newspapers",
+   "choice4": "network television",
+   "choice5": "online social networks",
+   "answer": "E"
+ },
+ {
+   "question": "Integrated marketing communications require a company's mass-market advertisements, Web site, e-mail, and personal selling communications to all ________.",
+   "choice1": "have equal portions of the advertising budget",
+   "choice2": "use independent communications directors",
+   "choice3": "develop separate marketing objectives",
+   "choice4": "engage the same target audience",
+   "choice5": "deliver a clear, consistent, and compelling message",
+   "answer": "E"
+ },
+ {
+   "question": "Delia's is a clothing retailer that targets teenage girls. The company runs coordinated promotions for its catalogs, Web site, and retail outlets. It uses the same models in its catalog, print ads, and Web site. Delia's works to make sure its public relations activities as well as its sales promotions harmonize with its advertising in all aspects. From this information, we can infer that Delia's is using ________.",
+   "choice1": "buzz marketing",
+   "choice2": "experiential marketing",
+   "choice3": "integrated marketing communication",
+   "choice4": "word-of-mouth marketing",
+   "choice5": "database marketing",
+   "answer": "C"
+ },
+ {
+   "question": "________ refers to the process of putting thought into symbolic form.",
+   "choice1": "Sending",
+   "choice2": "Encoding",
+   "choice3": "Decoding",
+   "choice4": "Receiving",
+   "choice5": "Feedback",
+   "answer": "B"
+ },
+ {
+   "question": "HP's advertising agency assembles words and illustrations into an advertisement that conveys the company's intended brand message. In the context of the communication process, HP is ________.",
+   "choice1": "messaging",
+   "choice2": "decoding",
+   "choice3": "sending",
+   "choice4": "encoding",
+   "choice5": "responding",
+   "answer": "D"
+ }
+]
