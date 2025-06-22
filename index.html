@@ -120,7 +120,7 @@ const userAnswers = {};
 
 async function loadQuizData() {
   try {
-    const response = await fetch("seminar_quiz.json");
+    const response = await fetch("data_tsp.json");
     if (!response.ok) throw new Error("HTTP error " + response.status);
     quizData = await response.json();
     loadQuestion(currentQuestion);
